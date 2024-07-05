@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meme Viewer</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 50px;
+            background-color: #282c34;
+            color: #ffffff;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background-color: #3c4048;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        h1 {
+            color: #61dafb;
+        }
+        .meme-img {
+            width: 100%;
+            border-radius: 10px;
+            border: 2px solid #61dafb;
+        }
+        .subreddit {
+            margin-top: 10px;
+            font-size: 1.2em;
+        }
+        .subreddit a {
+            color: #61dafb;
+            text-decoration: none;
+        }
+        .btn-new-meme {
+            margin-top: 20px;
+            background-color: #61dafb;
+            border: none;
+            color: #282c34;
+        }
+        .btn-new-meme:hover {
+            background-color: #21a1f1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container text-center">
+        <h1 class="my-4">Random Meme</h1>
+        <div id="meme-container">
+            <img src="{{ meme_pic }}" alt="Meme Image" class="meme-img" id="meme-img">
+            <div class="subreddit" id="subreddit">
+                From subreddit: <a href="https://reddit.com/r/{{ subreddit }}" target="_blank">{{ subreddit }}</a>
+            </div>
+        </div>
+        <button class="btn btn-primary btn-new-meme" id="new-meme-btn">Load New Meme</button>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#new-meme-btn').click(function() {
+                $.ajax({
+                    url: '/get_meme',
+                    type: 'GET',
+                    success: function(data) {
+                        $('#meme-img').attr('src', data.meme_pic);
+                        $('#subreddit').html(`From subreddit: <a href="https://reddit.com/r/${data.subreddit}" target="_blank">${data.subreddit}</a>`);
+                    },
+                    error: function(error) {
+                        console.log('Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
